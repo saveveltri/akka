@@ -66,7 +66,7 @@ trait Scheduler {
    *
    * Note: For scheduling within actors `with Timers` should be preferred.
    */
-  final def scheduleWithFixedDelay(
+  def scheduleWithFixedDelay(
       initialDelay: FiniteDuration,
       delay: FiniteDuration,
       runnable: Runnable)( // FIXME do we want the Runnable as separate parameter list?

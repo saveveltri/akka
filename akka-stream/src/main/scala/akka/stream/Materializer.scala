@@ -73,11 +73,30 @@ abstract class Materializer {
 
   /**
    * Interface for operators that need timer services for their functionality. Schedules a
+   * repeated task with the given `delay` between invocations.
+   *
+   * @return A [[akka.actor.Cancellable]] that allows cancelling the timer. Cancelling is best effort, if the event
+   *         has been already enqueued it will not have an effect.
+   */
+  def scheduleWithFixedDelay(initialDelay: FiniteDuration, delay: FiniteDuration, task: Runnable): Cancellable
+
+  /**
+   * Interface for operators that need timer services for their functionality. Schedules a
+   * repeated task with the given `interval` between invocations.
+   *
+   * @return A [[akka.actor.Cancellable]] that allows cancelling the timer. Cancelling is best effort, if the event
+   *         has been already enqueued it will not have an effect.
+   */
+  def scheduleAtFixedRate(initialDelay: FiniteDuration, interval: FiniteDuration, task: Runnable): Cancellable
+
+  /**
+   * Interface for operators that need timer services for their functionality. Schedules a
    * repeated task with the given interval between invocations.
    *
    * @return A [[akka.actor.Cancellable]] that allows cancelling the timer. Cancelling is best effort, if the event
    *         has been already enqueued it will not have an effect.
    */
+  // FIXME deprecate
   def schedulePeriodically(initialDelay: FiniteDuration, interval: FiniteDuration, task: Runnable): Cancellable
 
 }
@@ -102,6 +121,18 @@ private[akka] object NoMaterializer extends Materializer {
 
   def schedulePeriodically(initialDelay: FiniteDuration, interval: FiniteDuration, task: Runnable): Cancellable =
     throw new UnsupportedOperationException("NoMaterializer cannot schedule a repeated event")
+
+  override def scheduleWithFixedDelay(
+      initialDelay: FiniteDuration,
+      delay: FiniteDuration,
+      task: Runnable): Cancellable =
+    throw new UnsupportedOperationException("NoMaterializer cannot scheduleWithFixedDelay")
+
+  override def scheduleAtFixedRate(
+      initialDelay: FiniteDuration,
+      interval: FiniteDuration,
+      task: Runnable): Cancellable =
+    throw new UnsupportedOperationException("NoMaterializer cannot scheduleAtFixedRate")
 }
 
 /**

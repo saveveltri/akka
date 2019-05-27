@@ -102,7 +102,7 @@ class ReceiveTimeoutSpec extends AkkaSpec {
         }
       }))
 
-      val ticks = system.scheduler.schedule(100.millis, 100.millis, new Runnable {
+      val ticks = system.scheduler.scheduleWithFixedDelay(100.millis, 100.millis, new Runnable {
         override def run() = {
           timeoutActor ! TransparentTick
           timeoutActor ! Identify(None)
@@ -137,8 +137,8 @@ class ReceiveTimeoutSpec extends AkkaSpec {
       val count = new AtomicInteger(0)
 
       class ActorWithTimer() extends Actor with Timers {
-        timers.startPeriodicTimer("transparentTick", TransparentTick, 100.millis)
-        timers.startPeriodicTimer("identifyTick", Identify(None), 100.millis)
+        timers.startTimerWithFixedDelay("transparentTick", TransparentTick, 100.millis)
+        timers.startTimerWithFixedDelay("identifyTick", Identify(None), 100.millis)
 
         context.setReceiveTimeout(1 second)
         def receive: Receive = {

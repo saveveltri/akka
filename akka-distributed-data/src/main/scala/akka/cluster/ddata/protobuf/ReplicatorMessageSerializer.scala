@@ -159,10 +159,10 @@ class ReplicatorMessageSerializer(val system: ExtendedActorSystem)
     .millis
   private val readCache = new SmallCache[Read, Array[Byte]](4, cacheTimeToLive, m => readToProto(m).toByteArray)
   private val writeCache = new SmallCache[Write, Array[Byte]](4, cacheTimeToLive, m => writeToProto(m).toByteArray)
-  system.scheduler.schedule(cacheTimeToLive, cacheTimeToLive / 2) {
+  system.scheduler.scheduleWithFixedDelay(cacheTimeToLive, cacheTimeToLive / 2, () => {
     readCache.evict()
     writeCache.evict()
-  }(system.dispatchers.internalDispatcher)
+  })(system.dispatchers.internalDispatcher)
 
   private val writeAckBytes = dm.Empty.getDefaultInstance.toByteArray
   private val dummyAddress = UniqueAddress(Address("a", "b", "c", 2552), 1L)

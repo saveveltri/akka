@@ -97,7 +97,7 @@ private[akka] final class BehaviorSetup[C, E, S](
       if (snapshot)
         context.scheduleOnce(settings.recoveryEventTimeout, context.self, RecoveryTickEvent(snapshot = true))
       else
-        context.system.scheduler.scheduleAtFixedRate(
+        context.system.scheduler.scheduleWithFixedDelay(
           settings.recoveryEventTimeout,
           settings.recoveryEventTimeout,
           () => context.self ! RecoveryTickEvent(snapshot = false))

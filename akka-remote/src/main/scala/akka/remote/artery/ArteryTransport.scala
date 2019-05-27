@@ -503,10 +503,10 @@ private[remote] abstract class ArteryTransport(_system: ExtendedActorSystem, _pr
   private def startRemoveQuarantinedAssociationTask(): Unit = {
     val removeAfter = settings.Advanced.RemoveQuarantinedAssociationAfter
     val interval = removeAfter / 2
-    system.scheduler.schedule(removeAfter, interval) {
+    system.scheduler.scheduleWithFixedDelay(removeAfter, interval, () => {
       if (!isShutdown)
         associationRegistry.removeUnusedQuarantined(removeAfter)
-    }(system.dispatchers.internalDispatcher)
+    })(system.dispatchers.internalDispatcher)
   }
 
   // Select inbound lane based on destination to preserve message order,

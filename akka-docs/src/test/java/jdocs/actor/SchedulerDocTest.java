@@ -76,7 +76,7 @@ public class SchedulerDocTest extends AbstractJavaTest {
     Cancellable cancellable =
         system
             .scheduler()
-            .schedule(
+            .scheduleWithFixedDelay(
                 Duration.ZERO, Duration.ofMillis(50), tickActor, "Tick", system.dispatcher(), null);
 
     // This cancels further Ticks to be sent

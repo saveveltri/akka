@@ -37,6 +37,7 @@ object TimerSpec {
       with Timers {
     private var bumpCount = initial()
 
+    // FIXME test startTimerWithFixedDelay and startTimerAtFixedRate
     if (repeat)
       timers.startPeriodicTimer("T", Tick(bumpCount), interval)
     else

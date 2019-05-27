@@ -19,6 +19,17 @@ trait TimerScheduler[T] {
 
   /**
    * Start a periodic timer that will send `msg` to the `self` actor at
+   * a fixed `delay`.
+   *
+   * Each timer has a key and if a new timer with same key is started
+   * the previous is cancelled and it's guaranteed that a message from the
+   * previous timer is not received, even though it might already be enqueued
+   * in the mailbox when the new timer is started.
+   */
+  def startTimerWithFixedDelay(key: Any, msg: T, delay: java.time.Duration): Unit
+
+  /**
+   * Start a periodic timer that will send `msg` to the `self` actor at
    * a fixed `interval`.
    *
    * Each timer has a key and if a new timer with same key is started
@@ -26,6 +37,18 @@ trait TimerScheduler[T] {
    * previous timer is not received, even though it might already be enqueued
    * in the mailbox when the new timer is started.
    */
+  def startTimerAtFixedRate(key: Any, msg: T, interval: java.time.Duration): Unit
+
+  /**
+   * Start a periodic timer that will send `msg` to the `self` actor at
+   * a fixed `interval`.
+   *
+   * Each timer has a key and if a new timer with same key is started
+   * the previous is cancelled and it's guaranteed that a message from the
+   * previous timer is not received, even though it might already be enqueued
+   * in the mailbox when the new timer is started.
+   */
+  // FIXME deprecate or remove?
   def startPeriodicTimer(key: Any, msg: T, interval: Duration): Unit
 
   /**
